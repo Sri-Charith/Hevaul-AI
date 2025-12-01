@@ -147,6 +147,18 @@ export default function Medication() {
     }
   }
 
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this medication?')) {
+      try {
+        const config = { headers: { Authorization: `Bearer ${token}` } }
+        await axios.delete(`${API_URL}/${id}`, config)
+        fetchData()
+      } catch (error) {
+        console.error('Error deleting medication:', error)
+      }
+    }
+  }
+
   const getStatusColor = (med) => {
     if (!med.isActive) return 'bg-gray-100 border-gray-200'
     if (med.totalQuantity && med.totalQuantity < 5) return 'bg-red-50 border-red-200'
@@ -397,6 +409,9 @@ export default function Medication() {
                     </Button>
                     <Button variant="outline" size="icon" onClick={() => handleEdit(med)}>
                       <Edit2 className="w-4 h-4 text-gray-600" />
+                    </Button>
+                    <Button variant="outline" size="icon" onClick={() => handleDelete(med._id)} className="hover:bg-red-50 hover:text-red-600 hover:border-red-200">
+                      <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
                 </CardContent>
