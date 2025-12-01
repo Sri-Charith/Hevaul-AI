@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema(
         push: { type: Boolean, default: true },
       },
     },
+    calorieLimits: {
+      daily: { type: Number, default: 2000 },
+      monthly: { type: Number, default: 60000 },
+    },
   },
   {
     timestamps: true,
