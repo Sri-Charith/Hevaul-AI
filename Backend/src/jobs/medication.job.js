@@ -9,8 +9,13 @@ export const startMedicationJobs = () => {
   cron.schedule('* * * * *', async () => {
     try {
       const now = new Date()
-      const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
-      
+      let hours = now.getHours()
+      const minutes = now.getMinutes().toString().padStart(2, '0')
+      const ampm = hours >= 12 ? 'PM' : 'AM'
+      hours = hours % 12
+      hours = hours ? hours : 12 // the hour '0' should be '12'
+      const currentTime = `${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`
+
       // Find active medications that need reminders at this time
       const medications = await Medication.find({
         isActive: true,

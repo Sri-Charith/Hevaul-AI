@@ -104,6 +104,25 @@ const processNotification = async (notification) => {
           </div>
         </div>
         `
+        } else if (type === 'medication_reminder') {
+            const { medicationName, dosage, time } = metadata || {}
+            html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
+          <div style="background-color: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h2 style="color: #3b82f6; margin-top: 0;">💊 Medication Reminder</h2>
+            <p style="color: #374151; font-size: 16px;">Hello ${user.name},</p>
+            <p style="color: #374151; font-size: 16px;">It's time to take your medication:</p>
+            <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0;">
+              <p style="margin: 0; color: #1e40af; font-size: 18px; font-weight: bold;">${medicationName}</p>
+              <p style="margin: 5px 0 0 0; color: #1e40af;"><strong>Dosage:</strong> ${dosage}</p>
+              <p style="margin: 5px 0 0 0; color: #1e40af;"><strong>Time:</strong> ${time}</p>
+            </div>
+            <p style="color: #374151; font-size: 16px;">Please log this dose in the Hevaul AI app once taken.</p>
+            <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/medication" style="display: inline-block; background-color: #3b82f6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 10px;">Log Dose</a>
+            <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">Best regards,<br>Hevaul AI Team</p>
+          </div>
+        </div>
+        `
         } else {
             // Fallback generic HTML
             html = `<p>${message}</p>`

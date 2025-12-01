@@ -345,11 +345,14 @@ const Profile = () => {
                                 <div>
                                     <label className="text-sm font-medium text-gray-700 mb-1 block">Diseases / Conditions</label>
                                     {isEditing ? (
-                                        <Input
-                                            value={formData.healthProfile.diseases.join(', ')}
-                                            onChange={e => handleArrayInput(e, 'healthProfile', 'diseases')}
-                                            placeholder="e.g. Diabetes, Hypertension (comma separated)"
-                                        />
+                                        <div className="space-y-2">
+                                            <Input
+                                                value={formData.healthProfile.diseases.join(', ')}
+                                                onChange={e => handleArrayInput(e, 'healthProfile', 'diseases')}
+                                                placeholder="e.g. Diabetes, Hypertension (comma separated)"
+                                            />
+                                            <p className="text-xs text-gray-500">Separate multiple conditions with commas</p>
+                                        </div>
                                     ) : (
                                         <div className="flex flex-wrap gap-2">
                                             {formData.healthProfile.diseases.length > 0 ? (
@@ -364,11 +367,14 @@ const Profile = () => {
                                 <div>
                                     <label className="text-sm font-medium text-gray-700 mb-1 block">Allergies</label>
                                     {isEditing ? (
-                                        <Input
-                                            value={formData.healthProfile.allergies.join(', ')}
-                                            onChange={e => handleArrayInput(e, 'healthProfile', 'allergies')}
-                                            placeholder="e.g. Peanuts, Penicillin"
-                                        />
+                                        <div className="space-y-2">
+                                            <Input
+                                                value={formData.healthProfile.allergies.join(', ')}
+                                                onChange={e => handleArrayInput(e, 'healthProfile', 'allergies')}
+                                                placeholder="e.g. Peanuts, Penicillin"
+                                            />
+                                            <p className="text-xs text-gray-500">Separate multiple allergies with commas</p>
+                                        </div>
                                     ) : (
                                         <div className="flex flex-wrap gap-2">
                                             {formData.healthProfile.allergies.length > 0 ? (
@@ -384,13 +390,16 @@ const Profile = () => {
                             {/* Lifestyle */}
                             <div className="space-y-4">
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 mb-1 block">Current Medications</label>
+                                    <label className="text-sm font-medium text-gray-700 mb-1 block">Current Medications (Quick List)</label>
                                     {isEditing ? (
-                                        <Input
-                                            value={formData.healthProfile.medications.join(', ')}
-                                            onChange={e => handleArrayInput(e, 'healthProfile', 'medications')}
-                                            placeholder="e.g. Aspirin 100mg"
-                                        />
+                                        <div className="space-y-2">
+                                            <Input
+                                                value={formData.healthProfile.medications.join(', ')}
+                                                onChange={e => handleArrayInput(e, 'healthProfile', 'medications')}
+                                                placeholder="e.g. Aspirin 100mg"
+                                            />
+                                            <p className="text-xs text-gray-500">For detailed tracking, use the Medication page</p>
+                                        </div>
                                     ) : (
                                         <div className="flex flex-wrap gap-2">
                                             {formData.healthProfile.medications.length > 0 ? (
@@ -409,7 +418,7 @@ const Profile = () => {
                                             <select
                                                 value={formData.healthProfile.activityLevel}
                                                 onChange={e => setFormData({ ...formData, healthProfile: { ...formData.healthProfile, activityLevel: e.target.value } })}
-                                                className="w-full p-2 border rounded-lg text-sm"
+                                                className="w-full p-2 border rounded-lg text-sm bg-white"
                                             >
                                                 <option value="sedentary">Sedentary</option>
                                                 <option value="lightly_active">Lightly Active</option>
@@ -426,7 +435,7 @@ const Profile = () => {
                                             <select
                                                 value={formData.healthProfile.dietType}
                                                 onChange={e => setFormData({ ...formData, healthProfile: { ...formData.healthProfile, dietType: e.target.value } })}
-                                                className="w-full p-2 border rounded-lg text-sm"
+                                                className="w-full p-2 border rounded-lg text-sm bg-white"
                                             >
                                                 <option value="none">None</option>
                                                 <option value="vegetarian">Vegetarian</option>
