@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore.js';
 import { User, Mail, Lock, ArrowRight, CheckCircle, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useGoogleLogin } from '@react-oauth/google';
+import BrandLogo from '../../components/BrandLogo';
 
 // --- FIXED UI Components ---
 
@@ -30,7 +31,7 @@ const Input = ({ icon: Icon, className, containerClassName = '', ...props }) => 
       </div>
     )}
     <input
-      className={`w-full bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl py-3.5 ${Icon ? 'pl-11' : 'pl-4'} pr-4 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-200 ${className}`}
+      className={`w-full bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl py-3 ${Icon ? 'pl-11' : 'pl-4'} pr-4 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-200 ${className}`}
       {...props}
     />
   </div>
@@ -109,11 +110,11 @@ export default function Signup() {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl translate-y-1/2" />
       </div>
 
-      <div className="w-full max-w-5xl relative z-10">
-        <Card className="grid md:grid-cols-2 min-h-[600px]">
+      <div className="w-full max-w-4xl relative z-10">
+        <Card className="grid md:grid-cols-2 min-h-[500px]">
 
           {/* LEFT SIDE - BRANDING */}
-          <div className="hidden md:flex flex-col justify-between p-12 bg-blue-600 relative overflow-hidden">
+          <div className="hidden md:flex flex-col justify-between p-8 bg-blue-600 relative overflow-hidden">
             {/* Decorative Patterns */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
             <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-indigo-700"></div>
@@ -127,10 +128,15 @@ export default function Signup() {
                 <span className="text-xl font-bold text-white tracking-tight">Sign Up</span>
               </div>
 
-              <h2 className="text-4xl font-bold text-white mb-6 leading-[1.15]">
-                Hevaul AI<br />
-                the <span className="text-blue-200">AI reality.</span>
-              </h2>
+              <div className="mb-6">
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 inline-block mb-4 shadow-lg shadow-black/5">
+                  <BrandLogo textSize="text-3xl" logoSize="h-10" isWhite={false} />
+                </div>
+                <div className="text-4xl font-bold text-white mt-2 leading-[1.15]">
+                  Turn your ideas<br />
+                  into <span className="text-blue-200">reality.</span>
+                </div>
+              </div>
               <p className="text-blue-100 text-lg leading-relaxed max-w-sm">
                 Join the AI revolution with Hevaul AI.
               </p>
@@ -156,14 +162,14 @@ export default function Signup() {
           </div>
 
           {/* RIGHT SIDE - FORM */}
-          <div className="p-8 md:p-12 lg:p-16 bg-white flex flex-col justify-center">
+          <div className="p-6 md:p-8 lg:p-10 bg-white flex flex-col justify-center">
             <div className="max-w-sm mx-auto w-full">
-              <div className="mb-10">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h3>
-                <p className="text-gray-500">Enter your details to get started.</p>
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-1">Create Account</h3>
+                <p className="text-gray-500 text-sm">Enter your details to get started.</p>
               </div>
 
-              <form onSubmit={handleSignup} className="space-y-5">
+              <form onSubmit={handleSignup} className="space-y-4">
 
                 {/* Name */}
                 <div className="space-y-1.5">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { User } from 'lucide-react';
+import BrandLogo from './BrandLogo';
 
 const Navbar = () => {
     const location = useLocation();
@@ -18,10 +19,7 @@ const Navbar = () => {
 
                     {/* Center Logo */}
                     <Link to="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group">
-                        <h1 className="text-2xl font-bold tracking-tight">
-                            <span className="text-gray-900">Hevaul</span>
-                            <span className="text-blue-600">AI</span>
-                        </h1>
+                        <BrandLogo logoSize="h-8" textSize="text-2xl" />
                         <div className="h-0.5 w-0 bg-blue-600 absolute -bottom-1 left-1/2 -translate-x-1/2 transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100" />
                     </Link>
 

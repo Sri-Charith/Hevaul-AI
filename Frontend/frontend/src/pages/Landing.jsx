@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles, Utensils, Moon, Droplet, Pill, Brain, LogOut, Use
 import { useAuthStore } from '../store/authStore.js'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '../lib/utils.js'
+import BrandLogo from '../components/BrandLogo.jsx'
 
 export default function Landing() {
   const { user, token, logout } = useAuthStore()
@@ -23,10 +24,7 @@ export default function Landing() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <Link to="/" className="flex items-center gap-2">
-                <Sparkles className="h-6 w-6 text-blue-600" />
-                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                  Hevaul AI
-                </span>
+                <BrandLogo textSize="text-xl" logoSize="h-6" />
               </Link>
               <div className="flex items-center gap-4">
                 <span className="text-sm text-gray-600 hidden sm:inline-block">Welcome, {user?.name || 'User'}!</span>
@@ -61,10 +59,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-4 py-16 text-center">
 
           <div className="flex items-center justify-center gap-2 mb-6">
-            <Sparkles className="h-8 w-8 text-blue-600" />
-            <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-              Hevaul AI
-            </h1>
+            <BrandLogo textSize="text-6xl" logoSize="h-20" />
           </div>
 
           <p className="text-xl text-gray-600 mb-4">
