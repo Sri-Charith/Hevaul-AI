@@ -35,6 +35,43 @@ const userSchema = new mongoose.Schema(
         push: { type: Boolean, default: true },
       },
     },
+    photoUrl: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+    height: {
+      type: Number, // in cm
+    },
+    weight: {
+      type: Number, // in kg
+    },
+    healthProfile: {
+      diseases: [String],
+      allergies: [String],
+      medications: [String],
+      activityLevel: {
+        type: String,
+        enum: ['sedentary', 'lightly_active', 'moderately_active', 'very_active', 'extra_active'],
+        default: 'sedentary',
+      },
+      dietType: {
+        type: String,
+        enum: ['none', 'vegetarian', 'vegan', 'keto', 'paleo', 'gluten_free'],
+        default: 'none',
+      },
+    },
+    emergencyContact: {
+      name: String,
+      phone: String,
+      relation: String,
+    },
+    alertSettings: {
+      emailAlerts: { type: Boolean, default: true },
+      smsAlerts: { type: Boolean, default: false },
+      emergencyAlerts: { type: Boolean, default: true },
+    },
     calorieLimits: {
       daily: { type: Number, default: 2000 },
       monthly: { type: Number, default: 60000 },
@@ -46,9 +83,9 @@ const userSchema = new mongoose.Schema(
 )
 
 // Hash password before saving
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function () {
   if (!this.isModified('password')) {
-    next()
+    return
   }
   const salt = await bcrypt.genSalt(10)
   this.password = await bcrypt.hash(this.password, salt)

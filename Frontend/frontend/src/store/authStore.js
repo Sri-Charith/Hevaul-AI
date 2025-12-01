@@ -77,6 +77,26 @@ export const useAuthStore = create(
         }
       },
 
+      updateProfile: async (userData) => {
+        set({ isLoading: true, error: null })
+        try {
+          const response = await api.put('/auth/profile', userData)
+          const { token: newToken, ...user } = response.data
+          // Update token if it was refreshed (optional, but good practice)
+          if (newToken) {
+            localStorage.setItem('token', newToken)
+            set({ user, token: newToken, isLoading: false, error: null })
+          } else {
+            set({ user, isLoading: false, error: null })
+          }
+          return { success: true }
+        } catch (error) {
+          const errorMessage = error.response?.data?.message || 'Profile update failed'
+          set({ error: errorMessage, isLoading: false })
+          return { success: false, error: errorMessage }
+        }
+      },
+
       logout: () => {
         set({ user: null, token: null, error: null })
         localStorage.removeItem('token')

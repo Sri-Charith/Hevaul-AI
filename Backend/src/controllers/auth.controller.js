@@ -129,3 +129,76 @@ export const googleLogin = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+export const updateProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id)
+
+    if (user) {
+      if (req.body.name) user.name = req.body.name
+      if (req.body.email) user.email = req.body.email
+      if (req.body.dateOfBirth) user.dateOfBirth = req.body.dateOfBirth
+      if (req.body.gender) user.gender = req.body.gender
+      if (req.body.photoUrl) user.photoUrl = req.body.photoUrl
+      if (req.body.phone) user.phone = req.body.phone
+      if (req.body.height) user.height = req.body.height
+      if (req.body.weight) user.weight = req.body.weight
+
+      // Handle nested objects carefully
+      if (req.body.healthProfile) {
+        if (!user.healthProfile) user.healthProfile = {}
+        const hp = req.body.healthProfile
+        if (hp.diseases) user.healthProfile.diseases = hp.diseases
+        if (hp.allergies) user.healthProfile.allergies = hp.allergies
+        if (hp.medications) user.healthProfile.medications = hp.medications
+        if (hp.activityLevel) user.healthProfile.activityLevel = hp.activityLevel
+        if (hp.dietType) user.healthProfile.dietType = hp.dietType
+      }
+
+      if (req.body.emergencyContact) {
+        if (!user.emergencyContact) user.emergencyContact = {}
+        const ec = req.body.emergencyContact
+        if (ec.name) user.emergencyContact.name = ec.name
+        if (ec.phone) user.emergencyContact.phone = ec.phone
+        if (ec.relation) user.emergencyContact.relation = ec.relation
+      }
+
+      if (req.body.alertSettings) {
+        if (!user.alertSettings) user.alertSettings = {}
+        const as = req.body.alertSettings
+        if (as.emailAlerts !== undefined) user.alertSettings.emailAlerts = as.emailAlerts
+        if (as.smsAlerts !== undefined) user.alertSettings.smsAlerts = as.smsAlerts
+        if (as.emergencyAlerts !== undefined) user.alertSettings.emergencyAlerts = as.emergencyAlerts
+      }
+
+      if (req.body.password) {
+        user.password = req.body.password
+      }
+
+      const updatedUser = await user.save()
+
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        photoUrl: updatedUser.photoUrl,
+        phone: updatedUser.phone,
+        dateOfBirth: updatedUser.dateOfBirth,
+        gender: updatedUser.gender,
+        height: updatedUser.height,
+        weight: updatedUser.weight,
+        healthProfile: updatedUser.healthProfile,
+        emergencyContact: updatedUser.emergencyContact,
+        alertSettings: updatedUser.alertSettings,
+        token: generateToken(updatedUser._id),
+      })
+    } else {
+      res.status(404).json({ message: 'User not found' })
+    }
+  } catch (error) {
+    console.error('Profile update error:', error)
+    res.status(500).json({ message: error.message })
+  }
+}
