@@ -1,3 +1,8 @@
+import { useAuthStore } from '../../store/authStore'
+import { useNavigate } from 'react-router-dom'
+import { Button } from '../../components/ui/button'
+import { LogOut } from 'lucide-react'
+
 export default function Dashboard() {
   const { user, logout } = useAuthStore()
   const navigate = useNavigate()

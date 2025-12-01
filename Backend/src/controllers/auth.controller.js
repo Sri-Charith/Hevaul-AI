@@ -83,3 +83,49 @@ export const getMe = async (req, res) => {
   }
 }
 
+// @desc    Google Login
+// @route   POST /api/auth/google
+// @access  Public
+export const googleLogin = async (req, res) => {
+  try {
+    const { access_token } = req.body
+
+    const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${access_token}` },
+    })
+    const userInfo = await response.json()
+
+    if (userInfo.error) {
+      return res.status(400).json({ message: 'Invalid Google Token' })
+    }
+
+    const { email, name } = userInfo
+
+    let user = await User.findOne({ email })
+
+    if (user) {
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      })
+    } else {
+      const randomPassword = Math.random().toString(36).slice(-8)
+      user = await User.create({
+        name,
+        email,
+        password: randomPassword,
+      })
+
+      res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      })
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}

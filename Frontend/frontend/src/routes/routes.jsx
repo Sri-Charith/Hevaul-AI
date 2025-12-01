@@ -1,6 +1,7 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Outlet } from 'react-router-dom'
 import ProtectedRoute from '../components/ProtectedRoute.jsx'
 import PublicRoute from '../components/PublicRoute.jsx'
+import MainLayout from '../components/MainLayout.jsx'
 import Landing from '../pages/Landing.jsx'
 import Dashboard from '../pages/dashboard/Dashboard.jsx'
 import Diet from '../pages/diet/Diet.jsx'
@@ -10,6 +11,7 @@ import Medication from '../pages/medication/Medication.jsx'
 import AI from '../pages/ai/AI.jsx'
 import Login from '../pages/auth/Login.jsx'
 import Signup from '../pages/auth/Signup.jsx'
+import Profile from '../pages/Profile.jsx'
 
 export const router = createBrowserRouter([
   {
@@ -33,52 +35,43 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/dashboard',
     element: (
       <ProtectedRoute>
-        <Dashboard />
+        <MainLayout>
+          <Outlet />
+        </MainLayout>
       </ProtectedRoute>
     ),
-  },
-  {
-    path: '/diet',
-    element: (
-      <ProtectedRoute>
-        <Diet />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: '/sleep',
-    element: (
-      <ProtectedRoute>
-        <Sleep />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: '/water',
-    element: (
-      <ProtectedRoute>
-        <Water />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: '/medication',
-    element: (
-      <ProtectedRoute>
-        <Medication />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: '/ai',
-    element: (
-      <ProtectedRoute>
-        <AI />
-      </ProtectedRoute>
-    ),
+    children: [
+      {
+        path: '/dashboard',
+        element: <Dashboard />,
+      },
+      {
+        path: '/diet',
+        element: <Diet />,
+      },
+      {
+        path: '/sleep',
+        element: <Sleep />,
+      },
+      {
+        path: '/water',
+        element: <Water />,
+      },
+      {
+        path: '/medication',
+        element: <Medication />,
+      },
+      {
+        path: '/ai',
+        element: <AI />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
+      },
+    ],
   },
 ])
 

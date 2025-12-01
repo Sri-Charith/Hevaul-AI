@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
-import { Button } from '../components/ui/button.jsx'
-import { ArrowRight, Sparkles, Utensils, Moon, Droplet, Pill, Brain, LogOut } from 'lucide-react'
+import { Button, buttonVariants } from '../components/ui/button.jsx'
+import { ArrowRight, Sparkles, Utensils, Moon, Droplet, Pill, Brain, LogOut, User } from 'lucide-react'
 import { useAuthStore } from '../store/authStore.js'
 import { useNavigate } from 'react-router-dom'
+import { cn } from '../lib/utils.js'
 
 export default function Landing() {
   const { user, token, logout } = useAuthStore()
@@ -21,21 +22,33 @@ export default function Landing() {
         <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-200 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <div className="flex items-center gap-2">
+              <Link to="/" className="flex items-center gap-2">
                 <Sparkles className="h-6 w-6 text-blue-600" />
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                   Hevaul AI
                 </span>
-              </div>
+              </Link>
               <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">Welcome, {user?.name || 'User'}!</span>
+                <span className="text-sm text-gray-600 hidden sm:inline-block">Welcome, {user?.name || 'User'}!</span>
+
+                <Link
+                  to="/profile"
+                  className={cn(
+                    buttonVariants({ variant: 'ghost', size: 'icon' }),
+                    "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                  )}
+                  title="Profile"
+                >
+                  <User className="h-5 w-5" />
+                </Link>
+
                 <Button
                   variant="ghost"
                   onClick={handleLogout}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 text-gray-600 hover:text-red-600 hover:bg-red-50"
                 >
                   <LogOut className="h-4 w-4" />
-                  Logout
+                  <span className="hidden sm:inline">Logout</span>
                 </Button>
               </div>
             </div>
@@ -46,7 +59,7 @@ export default function Landing() {
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center">
         <div className="max-w-6xl mx-auto px-4 py-16 text-center">
-          
+
           <div className="flex items-center justify-center gap-2 mb-6">
             <Sparkles className="h-8 w-8 text-blue-600" />
             <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
@@ -159,19 +172,26 @@ export default function Landing() {
           ) : (
             /* Unauthenticated User - Show Auth Buttons */
             <div className="flex gap-4 justify-center">
-              <Button
-                asChild
-                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold px-8 py-6 text-lg"
+              <Link
+                to="/signup"
+                className={cn(
+                  buttonVariants({ variant: 'default', size: 'lg' }),
+                  "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold px-8 py-6 text-lg"
+                )}
               >
-                <Link to="/signup">
-                  Get Started
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
+                Get Started
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
 
-              <Button asChild variant="outline" className="px-8 py-6 text-lg">
-                <Link to="/login">Sign In</Link>
-              </Button>
+              <Link
+                to="/login"
+                className={cn(
+                  buttonVariants({ variant: 'outline', size: 'lg' }),
+                  "px-8 py-6 text-lg"
+                )}
+              >
+                Sign In
+              </Link>
             </div>
           )}
 

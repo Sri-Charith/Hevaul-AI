@@ -1,189 +1,276 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuthStore } from '../../store/authStore.js'
-import { Button } from '../../components/ui/button.jsx'
-import { Input } from '../../components/ui/input.jsx'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '../../components/ui/card.jsx'
-import { toast } from 'sonner'
-import { User, Mail, Lock, ArrowRight } from 'lucide-react'
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuthStore } from '../../store/authStore.js';
+import { User, Mail, Lock, ArrowRight, CheckCircle, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { useGoogleLogin } from '@react-oauth/google';
 
-export default function Signup() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const register = useAuthStore((state) => state.register)
-  const navigate = useNavigate()
+// --- FIXED UI Components ---
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+const Button = ({ children, className, variant = 'primary', ...props }) => {
+  const baseStyles = "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-200 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100";
 
-    if (password.length < 6) {
-      toast.error('Password too short', {
-        description: 'Password must be at least 6 characters',
-      })
-      return
-    }
-
-    setIsLoading(true)
-
-    const result = await register(name, email, password)
-
-    if (result.success) {
-      toast.success('Account created!', {
-        description: 'Welcome to Hevaul AI!',
-      })
-      navigate('/')
-    } else {
-      toast.error('Registration failed', {
-        description: result.error || 'Please try again',
-      })
-    }
-
-    setIsLoading(false)
-  }
+  const variants = {
+    primary: "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/25 focus:ring-blue-500",
+    ghost: "bg-transparent hover:bg-gray-100 text-gray-600 hover:text-gray-900 focus:ring-gray-200",
+    outline: "border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 focus:ring-gray-200"
+  };
 
   return (
-    <div 
-      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
-      style={{
-        background: 'linear-gradient(to bottom right, #2563eb, #3b82f6, #1e40af)'
-      }}
-    >
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-white rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000"></div>
+    <button className={`${baseStyles} ${variants[variant]} ${className}`} {...props}>
+      {children}
+    </button>
+  );
+};
+
+const Input = ({ icon: Icon, className, containerClassName = '', ...props }) => (
+  <div className={`relative group ${containerClassName}`}>
+    {Icon && (
+      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-600 transition-colors duration-200 pointer-events-none">
+        <Icon className="h-5 w-5" />
       </div>
-      
-      <Card 
-        className="w-full max-w-md shadow-2xl border-0 relative z-10"
-        style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(8px)'
-        }}
-      >
-        <CardHeader className="space-y-3 text-center px-8 pt-10 pb-6">
-          <div 
-            className="mx-auto w-16 h-16 rounded-xl flex items-center justify-center shadow-lg mb-2"
-            style={{
-              background: 'linear-gradient(to bottom right, #2563eb, #1d4ed8)'
-            }}
-          >
-            <User className="h-8 w-8 text-white" />
+    )}
+    <input
+      className={`w-full bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl py-3.5 ${Icon ? 'pl-11' : 'pl-4'} pr-4 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all duration-200 ${className}`}
+      {...props}
+    />
+  </div>
+);
+
+const Card = ({ className, children }) => (
+  <div className={`rounded-3xl bg-white shadow-2xl shadow-gray-200/50 border border-white/50 overflow-hidden ${className}`}>
+    {children}
+  </div>
+);
+
+// --- Main Signup Component ---
+export default function Signup() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState({ type: '', message: '' });
+  const { register, googleLogin } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setStatus({ type: '', message: '' });
+
+    if (password.length < 6) {
+      setStatus({ type: 'error', message: 'Password must be at least 6 characters' });
+      setIsLoading(false);
+      return;
+    }
+
+    const result = await register(name, email, password);
+
+    if (result.success) {
+      setStatus({ type: 'success', message: 'Account created successfully!' });
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+    } else {
+      setStatus({ type: 'error', message: result.error || 'Registration failed' });
+      setIsLoading(false);
+    }
+  };
+
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setIsLoading(true);
+      setStatus({ type: '', message: '' });
+
+      const result = await googleLogin(tokenResponse.access_token);
+
+      if (result.success) {
+        setStatus({ type: 'success', message: 'Successfully logged in with Google!' });
+        setTimeout(() => {
+          navigate('/');
+        }, 500);
+      } else {
+        setStatus({ type: 'error', message: result.error || 'Google login failed' });
+        setIsLoading(false);
+      }
+    },
+    onError: () => {
+      setStatus({ type: 'error', message: 'Google login failed' });
+      setIsLoading(false);
+    }
+  });
+
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center relative bg-gradient-to-br from-blue-50 via-white to-purple-50 font-sans p-4">
+
+      {/* Subtle Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl translate-y-1/2" />
+      </div>
+
+      <div className="w-full max-w-5xl relative z-10">
+        <Card className="grid md:grid-cols-2 min-h-[600px]">
+
+          {/* LEFT SIDE - BRANDING */}
+          <div className="hidden md:flex flex-col justify-between p-12 bg-blue-600 relative overflow-hidden">
+            {/* Decorative Patterns */}
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-indigo-700"></div>
+
+            {/* Content */}
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-12">
+                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/10">
+                  <Lock className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold text-white tracking-tight">Sign Up</span>
+              </div>
+
+              <h2 className="text-4xl font-bold text-white mb-6 leading-[1.15]">
+                Hevaul AI<br />
+                the <span className="text-blue-200">AI reality.</span>
+              </h2>
+              <p className="text-blue-100 text-lg leading-relaxed max-w-sm">
+                Join the AI revolution with Hevaul AI.
+              </p>
+            </div>
+
+            {/* Floating Stats Card */}
+            <div className="relative z-10 mt-auto">
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 max-w-xs transform hover:scale-105 transition-transform duration-300 cursor-default">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-500/30 flex items-center justify-center">
+                    <CheckCircle className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-white font-semibold">System Operational</div>
+                    <div className="text-blue-200 text-sm">All services online</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-8 text-xs text-blue-200/80 font-medium">
+                &copy; 2025 Hevaul AI
+              </div>
+            </div>
           </div>
-          <CardTitle className="text-3xl font-bold text-gray-900 tracking-tight">
-            Create Account
-          </CardTitle>
-          <CardDescription className="text-gray-600 text-base">
-            Sign up to get started with Hevaul AI
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="px-8 pb-6">
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-2">
-              <label htmlFor="name" className="text-sm font-semibold text-gray-700 block">
-                Full Name
-              </label>
-              <div className="relative group">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500 h-5 w-5 transition-colors group-focus-within:text-blue-600 z-10" />
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className="pl-11 h-12 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all w-full"
-                />
+
+          {/* RIGHT SIDE - FORM */}
+          <div className="p-8 md:p-12 lg:p-16 bg-white flex flex-col justify-center">
+            <div className="max-w-sm mx-auto w-full">
+              <div className="mb-10">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h3>
+                <p className="text-gray-500">Enter your details to get started.</p>
               </div>
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-semibold text-gray-700 block">
-                Email Address
-              </label>
-              <div className="relative group">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500 h-5 w-5 transition-colors group-focus-within:text-blue-600 z-10" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="pl-11 h-12 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all w-full"
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-semibold text-gray-700 block">
-                Password
-              </label>
-              <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500 h-5 w-5 transition-colors group-focus-within:text-blue-600 z-10" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="At least 6 characters"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  className="pl-11 h-12 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all w-full"
-                />
-              </div>
-            </div>
-            <Button
-              type="submit"
-              className="w-full text-white font-semibold py-3 h-12 text-base shadow-lg hover:shadow-xl transition-all duration-200 mt-6 flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(to right, #2563eb, #1d4ed8)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(to right, #1d4ed8, #1e40af)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'linear-gradient(to right, #2563eb, #1d4ed8)'
-              }}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+
+              <form onSubmit={handleSignup} className="space-y-5">
+
+                {/* Name */}
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold text-gray-700 ml-1">Full Name</label>
+                  <Input
+                    icon={User}
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {/* Email */}
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold text-gray-700 ml-1">Email</label>
+                  <Input
+                    icon={Mail}
+                    type="email"
+                    placeholder="john@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {/* Password */}
+                <div className="space-y-1.5">
+                  <label className="text-sm font-semibold text-gray-700 ml-1">Password</label>
+                  <div className="relative">
+                    <Input
+                      icon={Lock}
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="pr-12" // Extra padding for eye icon
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors focus:outline-none"
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-500 ml-1">Must be at least 6 characters</p>
+                </div>
+
+                {/* Status Messages */}
+                {status.message && (
+                  <div className={`p-4 rounded-xl flex items-start gap-3 text-sm ${status.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'}`}>
+                    {status.type === 'success' ? <CheckCircle className="h-5 w-5 shrink-0" /> : <AlertCircle className="h-5 w-5 shrink-0" />}
+                    <span className="font-medium">{status.message}</span>
+                  </div>
+                )}
+
+                <Button type="submit" className="w-full h-12 text-base mt-2" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>Creating account...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Sign Up</span>
+                      <ArrowRight className="h-5 w-5" />
+                    </>
+                  )}
+                </Button>
+
+                <div className="relative py-4">
+                  <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-gray-100"></span></div>
+                  <div className="relative flex justify-center text-xs uppercase tracking-wider"><span className="bg-white px-4 text-gray-400 font-medium">Or continue with</span></div>
+                </div>
+
+                {/* Google Button */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full h-12 text-sm font-medium hover:bg-gray-50 bg-white border-gray-200 text-gray-700"
+                  onClick={() => loginWithGoogle()}
+                >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                   </svg>
-                  Creating account...
-                </span>
-              ) : (
-                <>
-                  Sign Up
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </>
-              )}
-            </Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex flex-col items-center justify-center px-8 pt-4 pb-8">
-          <div className="text-sm text-center text-gray-600 w-full">
-            Already have an account?{' '}
-            <Link
-              to="/login"
-              className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
-            >
-              Sign in
-            </Link>
+                  <span>Sign up with Google</span>
+                </Button>
+
+                <div className="text-center mt-8">
+                  <p className="text-sm text-gray-500">
+                    Already have an account?{' '}
+                    <Link to="/login" className="text-blue-600 font-semibold hover:text-blue-700 transition-colors">
+                      Sign in
+                    </Link>
+                  </p>
+                </div>
+              </form>
+            </div>
           </div>
-        </CardFooter>
-      </Card>
+        </Card>
+      </div>
     </div>
-  )
+  );
 }
