@@ -1,5 +1,5 @@
+import 'dotenv/config'
 import express from 'express'
-import dotenv from 'dotenv'
 import morgan from 'morgan'
 import cors from 'cors'
 import connectDB from './config/db.js'
@@ -12,8 +12,7 @@ import waterRoutes from './routes/water.routes.js'
 import medicationRoutes from './routes/medication.routes.js'
 import aiRoutes from './routes/ai.routes.js'
 
-// Load env vars
-dotenv.config()
+
 
 // Connect to database
 connectDB()

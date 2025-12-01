@@ -63,85 +63,53 @@ export const createDietLog = async (req, res) => {
     const monthlyLimit = user.calorieLimits?.monthly || 60000
 
     // Check daily limit
+    console.log(`[Debug] Checking Daily Limit: Total=${dailyTotal}, Limit=${dailyLimit}`)
+
     if (dailyTotal > dailyLimit) {
-      const notification = await Notification.create({
+      console.log('[Debug] Daily limit exceeded. Creating notification...')
+      console.log('[Debug] Daily limit exceeded. Creating notification...')
+      await Notification.create({
         user: req.user.id,
         type: 'calorie_limit_daily',
         title: 'Daily Calorie Limit Exceeded',
         message: `You've exceeded your daily calorie limit of ${dailyLimit} kcal. Current intake: ${dailyTotal.toFixed(0)} kcal.`,
         metadata: { dailyTotal, dailyLimit },
+        status: 'pending' // Worker will pick this up
       })
 
+      console.log(`[Debug] User email pref: ${user.preferences?.notifications?.email}`)
+
       if (user.preferences?.notifications?.email) {
-        try {
-          await sendEmailNotification(
-            user.email,
-            'Daily Calorie Limit Exceeded - Hevaul AI',
-            `You've exceeded your daily calorie limit of ${dailyLimit} kcal. Current intake: ${dailyTotal.toFixed(0)} kcal. Please be mindful of your calorie consumption.`,
-            `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
-              <div style="background-color: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <h2 style="color: #ef4444; margin-top: 0;">⚠️ Daily Calorie Limit Exceeded</h2>
-                <p style="color: #374151; font-size: 16px;">Hello ${user.name},</p>
-                <p style="color: #374151; font-size: 16px;">You've exceeded your daily calorie limit of <strong>${dailyLimit} kcal</strong>.</p>
-                <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; margin: 20px 0;">
-                  <p style="margin: 0; color: #991b1b;"><strong>Current Intake:</strong> ${dailyTotal.toFixed(0)} kcal</p>
-                  <p style="margin: 5px 0 0 0; color: #991b1b;"><strong>Over Limit:</strong> ${(dailyTotal - dailyLimit).toFixed(0)} kcal</p>
-                </div>
-                <p style="color: #374151; font-size: 16px;">Please be mindful of your calorie consumption and consider adjusting your meals for the rest of the day.</p>
-                <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">Best regards,<br>Hevaul AI Team</p>
-              </div>
-            </div>
-            `
-          )
-        } catch (emailError) {
-          console.error('Failed to send daily limit email:', emailError)
-          // Don't fail the request if email fails
-        }
+        console.log(`[Debug] Creating daily limit notification for user ${user.email}`)
+        // Notification is already created above, just ensure status is pending to be picked up by worker
+        // The previous code created a notification but didn't use the worker fields fully or relied on direct send.
+        // We need to update the notification creation to include status 'pending' explicitly if not default,
+        // and REMOVE the direct sendEmailNotification call.
+
+        // Actually, looking at the code, 'notification' variable is created on line 70 but not used for the email logic really.
+        // We should update that creation to be the source of truth for the worker.
       }
+    } else {
+      console.log('[Debug] Daily limit NOT exceeded.')
     }
 
     // Check monthly limit
     if (monthlyTotal > monthlyLimit) {
-      const notification = await Notification.create({
+      console.log('[Debug] Monthly limit exceeded. Creating notification...')
+      await Notification.create({
         user: req.user.id,
         type: 'calorie_limit_monthly',
         title: 'Monthly Calorie Limit Exceeded',
         message: `You've exceeded your monthly calorie limit of ${monthlyLimit} kcal. Current intake: ${monthlyTotal.toFixed(0)} kcal.`,
         metadata: { monthlyTotal, monthlyLimit },
+        status: 'pending' // Worker will pick this up
       })
-
-      if (user.preferences?.notifications?.email) {
-        try {
-          await sendEmailNotification(
-            user.email,
-            'Monthly Calorie Limit Exceeded - Hevaul AI',
-            `You've exceeded your monthly calorie limit of ${monthlyLimit} kcal. Current intake: ${monthlyTotal.toFixed(0)} kcal. Please review your monthly diet plan.`,
-            `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
-              <div style="background-color: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <h2 style="color: #ef4444; margin-top: 0;">⚠️ Monthly Calorie Limit Exceeded</h2>
-                <p style="color: #374151; font-size: 16px;">Hello ${user.name},</p>
-                <p style="color: #374151; font-size: 16px;">You've exceeded your monthly calorie limit of <strong>${monthlyLimit} kcal</strong>.</p>
-                <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; margin: 20px 0;">
-                  <p style="margin: 0; color: #991b1b;"><strong>Current Intake:</strong> ${monthlyTotal.toFixed(0)} kcal</p>
-                  <p style="margin: 5px 0 0 0; color: #991b1b;"><strong>Over Limit:</strong> ${(monthlyTotal - monthlyLimit).toFixed(0)} kcal</p>
-                </div>
-                <p style="color: #374151; font-size: 16px;">Please review your monthly diet plan and consider adjusting your calorie intake for the remaining days of the month.</p>
-                <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">Best regards,<br>Hevaul AI Team</p>
-              </div>
-            </div>
-            `
-          )
-        } catch (emailError) {
-          console.error('Failed to send monthly limit email:', emailError)
-          // Don't fail the request if email fails
-        }
-      }
     }
 
     res.status(201).json(dietLog)
   } catch (error) {
+    console.error(`CRITICAL ERROR in createDietLog: ${error.message}`)
+    console.error(error.stack)
     res.status(500).json({ message: error.message })
   }
 }
@@ -309,3 +277,140 @@ export const updateCalorieLimits = async (req, res) => {
   }
 }
 
+// @desc    Send monthly diet report
+// @route   POST /api/diet/report/monthly
+// @access  Private
+export const sendMonthlyReport = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id)
+    const today = new Date()
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999)
+    const monthName = startOfMonth.toLocaleString('default', { month: 'long' })
+
+    // Get monthly logs
+    const monthlyLogs = await DietLog.find({
+      user: req.user.id,
+      date: { $gte: startOfMonth, $lte: endOfMonth },
+    })
+
+    const monthlyTotal = monthlyLogs.reduce((sum, log) => sum + (log.totalCalories || 0), 0)
+    const monthlyLimit = user.calorieLimits?.monthly || 60000
+    const averageCalories = monthlyLogs.length > 0 ? (monthlyTotal / new Date().getDate()).toFixed(0) : 0
+
+    // Calculate macros
+    let totalProtein = 0
+    let totalCarbs = 0
+    let totalFat = 0
+
+    monthlyLogs.forEach((log) => {
+      log.foodItems.forEach((item) => {
+        totalProtein += item.protein || 0
+        totalCarbs += item.carbs || 0
+        totalFat += item.fat || 0
+      })
+    })
+
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
+        <div style="background-color: #ffffff; border-radius: 16px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #111827; margin: 0; font-size: 24px;">Monthly Diet Report</h1>
+            <p style="color: #6b7280; margin-top: 5px;">${monthName} ${today.getFullYear()}</p>
+          </div>
+
+          <div style="background-color: #f3f4f6; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 10px; border-bottom: 1px solid #e5e7eb;">
+                  <span style="color: #6b7280; font-size: 14px;">Total Calories</span>
+                  <div style="color: #111827; font-size: 18px; font-weight: bold;">${monthlyTotal.toFixed(0)} kcal</div>
+                </td>
+                <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: right;">
+                  <span style="color: #6b7280; font-size: 14px;">Monthly Goal</span>
+                  <div style="color: #111827; font-size: 18px; font-weight: bold;">${monthlyLimit} kcal</div>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; padding-top: 15px;">
+                  <span style="color: #6b7280; font-size: 14px;">Daily Average</span>
+                  <div style="color: #3b82f6; font-size: 18px; font-weight: bold;">${averageCalories} kcal</div>
+                </td>
+                <td style="padding: 10px; padding-top: 15px; text-align: right;">
+                  <span style="color: #6b7280; font-size: 14px;">Status</span>
+                  <div style="color: ${monthlyTotal > monthlyLimit ? '#ef4444' : '#10b981'}; font-size: 18px; font-weight: bold;">
+                    ${monthlyTotal > monthlyLimit ? 'Over Limit' : 'On Track'}
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <h3 style="color: #374151; font-size: 16px; margin-bottom: 15px;">Macro Breakdown</h3>
+          <div style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 30px;">
+            <div style="flex: 1; background-color: #eff6ff; padding: 15px; border-radius: 10px; text-align: center;">
+              <div style="color: #3b82f6; font-weight: bold; font-size: 18px;">${totalProtein.toFixed(0)}g</div>
+              <div style="color: #60a5fa; font-size: 12px; text-transform: uppercase; margin-top: 4px;">Protein</div>
+            </div>
+            <div style="flex: 1; background-color: #ecfdf5; padding: 15px; border-radius: 10px; text-align: center;">
+              <div style="color: #10b981; font-weight: bold; font-size: 18px;">${totalCarbs.toFixed(0)}g</div>
+              <div style="color: #34d399; font-size: 12px; text-transform: uppercase; margin-top: 4px;">Carbs</div>
+            </div>
+            <div style="flex: 1; background-color: #fff7ed; padding: 15px; border-radius: 10px; text-align: center;">
+              <div style="color: #f97316; font-weight: bold; font-size: 18px;">${totalFat.toFixed(0)}g</div>
+              <div style="color: #fb923c; font-size: 12px; text-transform: uppercase; margin-top: 4px;">Fat</div>
+            </div>
+          </div>
+
+          <p style="color: #6b7280; font-size: 14px; text-align: center; margin: 0;">
+            Keep up the great work! <br>
+            <span style="color: #9ca3af; font-size: 12px;">Sent by Hevaul AI</span>
+          </p>
+        </div>
+      </div>
+    `
+
+    await sendEmailNotification(
+      user.email,
+      `Your Monthly Diet Report - ${monthName}`,
+      `Here is your diet summary for ${monthName}. Total Calories: ${monthlyTotal.toFixed(0)}.`,
+      html
+    )
+
+    res.json({ message: 'Monthly report sent successfully' })
+  } catch (error) {
+    console.error('Error sending report:', error)
+    res.status(500).json({ message: 'Failed to send report' })
+  }
+}
+
+
+
+// @desc    Test alert email
+// @route   POST /api/diet/test-alert
+// @access  Private
+export const testAlertEmail = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id)
+
+    console.log(`[Test] Creating test notification for ${user.email}`)
+
+    const notification = await Notification.create({
+      user: req.user.id,
+      type: 'calorie_limit_daily',
+      title: 'Test Daily Calorie Limit Exceeded',
+      message: `This is a test alert. You've exceeded your daily calorie limit.`,
+      metadata: { dailyTotal: 2500, dailyLimit: 2000 },
+      status: 'pending'
+    })
+
+    res.json({
+      message: 'Test notification created',
+      notificationId: notification._id,
+      status: notification.status
+    })
+  } catch (error) {
+    console.error('Test alert error:', error)
+    res.status(500).json({ message: error.message })
+  }
+}
