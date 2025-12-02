@@ -1,0 +1,62 @@
+[
+  {
+    "id": "exr_41n2hLA8xydD4dzE",
+    "name": "Triceps Press",
+    "equipment": "bodyweight",
+    "imageUrl": "https://cdn.exercisedb.dev/w/images/dK1H4xO/41n2hLA8xydD4dzE__Triceps-Press-(Head-Below-Bench)_Upper-Arms.png"
+  },
+  {
+    "id": "exr_41n2hadQgEEX8wDN",
+    "name": "Triceps Dip",
+    "equipment": "bodyweight",
+    "imageUrl": "https://cdn.exercisedb.dev/w/images/1e6EUNM/41n2hadQgEEX8wDN__Triceps-Dip_Upper-Arms.png"
+  },
+  {
+    "id": "exr_41n2hHH9bNfi98YU",
+    "name": "Triceps Dips Floor",
+    "equipment": "bodyweight",
+    "imageUrl": "https://cdn.exercisedb.dev/w/images/O424Uel/41n2hHH9bNfi98YU__Triceps-Dips-Floor_Upper-Arms.png"
+  },
+  {
+    "id": "exr_41n2hndkoGHD1ogh",
+    "name": "Triceps Dip",
+    "equipment": "bodyweight",
+    "imageUrl": "https://cdn.exercisedb.dev/w/images/mfdrWaf/41n2hndkoGHD1ogh__Triceps-Dip_Upper-Arms.png"
+  },
+  {
+    "id": "exr_41n2hmhxk35fbHbC",
+    "name": "Push-up on Forearms",
+    "equipment": "bodyweight",
+    "imageUrl": "https://cdn.exercisedb.dev/w/images/zObm0aB/41n2hmhxk35fbHbC__Push-up-on-Forearms_Upper-Arms.png"
+  },
+  {
+    "id": "exr_41n2hUKc7JPrtJQj",
+    "name": "Dip on Floor with Chair",
+    "equipment": "chair",
+    "imageUrl": "https://cdn.exercisedb.dev/w/images/KFWTdf7/41n2hUKc7JPrtJQj__Dip-on-Floor-with-Chair_Chest.png"
+  },
+  {
+    "id": "exr_41n2hoFGGwZDNFT1",
+    "name": "Bench Dip on Floor",
+    "equipment": "bench",
+    "imageUrl": "https://cdn.exercisedb.dev/w/images/Y3xVtY1/41n2hoFGGwZDNFT1__Bench-dip-on-floor_Upper-Arms.png"
+  },
+  {
+    "id": "exr_41n2hPgRbN1KtJuD",
+    "name": "Close-grip Push-up",
+    "equipment": "bodyweight",
+    "imageUrl": "https://cdn.exercisedb.dev/w/images/nWji4PA/41n2hPgRbN1KtJuD__Close-Grip-Push-up_Upper-Arms.png"
+  },
+  {
+    "id": "exr_41n2hRZ6fgsLyd77",
+    "name": "Diamond Push-up",
+    "equipment": "bodyweight",
+    "imageUrl": "https://cdn.exercisedb.dev/w/images/kopfkQf/41n2hRZ6fgsLyd77__Diamond-Push-up_Upper-Arms.png"
+  },
+  {
+    "id": "exr_41n2hdHtZrMPkcqY",
+    "name": "Dumbbell Lying Floor Skull Crusher",
+    "equipment": "dumbbell",
+    "imageUrl": "https://cdn.exercisedb.dev/w/images/wRbgzmU/41n2hdHtZrMPkcqY__Dumbbell-Lying-Floor-Skullcrusher_Upper-Arms.png"
+  }
+]

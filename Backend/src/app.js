@@ -11,6 +11,7 @@ import sleepRoutes from './routes/sleep.routes.js'
 import waterRoutes from './routes/water.routes.js'
 import medicationRoutes from './routes/medication.routes.js'
 import aiRoutes from './routes/ai.routes.js'
+import exerciseRoutes from './routes/exercise.routes.js'
 
 
 
@@ -37,6 +38,7 @@ app.use('/api/sleep', sleepRoutes)
 app.use('/api/water', waterRoutes)
 app.use('/api/medication', medicationRoutes)
 app.use('/api/ai', aiRoutes)
+app.use('/api/exercises', exerciseRoutes)
 
 // Health check route
 app.get('/api/health', (req, res) => {

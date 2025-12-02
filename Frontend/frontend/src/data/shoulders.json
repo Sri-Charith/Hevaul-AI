@@ -1,0 +1,64 @@
+{
+  "SHOULDERS": [
+    {
+      "id": "exr_41n2hZqkvM55qJve",
+      "name": "Shoulder Stretch Behind the Back",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/4FhfSlL/41n2hZqkvM55qJve__Shoulder-Stretch-Behind-the-Back_Shoulders.png"
+    },
+    {
+      "id": "exr_41n2hJ5Harig7K7F",
+      "name": "Seated Shoulder Flexor Depresor Retractor Stretch",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/aUzXmXR/41n2hJ5Harig7K7F__Seated-Shoulder-Flexor-Depresor-Retractor-Stretch_Shoulders.png"
+    },
+    {
+      "id": "exr_41n2hs6camM22yBG",
+      "name": "Seated Shoulder Press",
+      "equipment": "DUMBBELL",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/y7xLPmP/41n2hs6camM22yBG__Dumbbell-Seated-Shoulder-Press_Shoulders.png"
+    },
+    {
+      "id": "exr_41n2hw4iksLYXESz",
+      "name": "Seated Shoulder Flexor Depresor Retractor Stretch Bent Knee",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/qikjOS2/41n2hw4iksLYXESz__Seated-Shoulder-Flexor-Depresor-Retractor-Stretch-Bent-Knee-(female)_Shoulders.png"
+    },
+    {
+      "id": "exr_41n2hWQVZanCB1d7",
+      "name": "Circles Arm",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/8ycvb4U/41n2hWQVZanCB1d7__Circles-Arm_Shoulders.png"
+    },
+    {
+      "id": "exr_41n2hTkfLWpc57BQ",
+      "name": "Body-Up",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/TAWKvXT/41n2hTkfLWpc57BQ__Body-Up_Shoulders.png"
+    },
+    {
+      "id": "exr_41n2hUBVSgXaKhau",
+      "name": "Standing Arms Circling",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/ff0Oqgs/41n2hUBVSgXaKhau__Standing-Arms-Circling-(female)_Shoulders.png"
+    },
+    {
+      "id": "exr_41n2hMRXm49mM62z",
+      "name": "Arnold Press",
+      "equipment": "DUMBBELL",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/x8gEzvq/41n2hMRXm49mM62z__Dumbbell-Arnold-Press-II_Shoulders.png"
+    },
+    {
+      "id": "exr_41n2hnAGfMhp95LQ",
+      "name": "Shoulder Tap Push-up",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/ntIsUOZ/41n2hnAGfMhp95LQ__Shoulder-Tap-Push-up_Plyometrics.png"
+    },
+    {
+      "id": "exr_41n2hS5UrMusVCEE",
+      "name": "Lateral Raise with Towel",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/jqBj0SV/41n2hS5UrMusVCEE__Lateral-Raise-with-Towel_Shoulders.png"
+    }
+  ]
+}

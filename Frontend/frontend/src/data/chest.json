@@ -1,0 +1,46 @@
+{
+  "CHEST": [
+    {
+      "id": "exr_41n2hGUso7JFmuYR",
+      "name": "Decline Push-Up",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/RKnSv6J/41n2hGUso7JFmuYR__Decline-Push-Up-m_chest.png"
+    },
+    {
+      "id": "exr_41n2hHLE8aJXaxKR",
+      "name": "Cobra Push-up",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/3mCuoA5/41n2hHLE8aJXaxKR__Cobra-Push-up_Chest.png"
+    },
+    {
+      "id": "exr_41n2hkK8hGAcSnW7",
+      "name": "Chest Dip",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/JYueqsW/41n2hkK8hGAcSnW7__Chest-Dip_Chest.png"
+    },
+    {
+      "id": "exr_41n2hNXJadYcfjnd",
+      "name": "Push-up",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/YWYV3BP/41n2hNXJadYcfjnd__Push-up-m_Chest.png"
+    },
+    {
+      "id": "exr_41n2hR12rPqdpWP8",
+      "name": "Pike-to-Cobra Push-up",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/6AE4LQ9/41n2hR12rPqdpWP8__Pike-to-Cobra-Push-up_Chest.png"
+    },
+    {
+      "id": "exr_41n2hSvEPVntpxSG",
+      "name": "Kneeling Rotational Push-up",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/u3ifRW7/41n2hSvEPVntpxSG__Kneeling-Rotational-Push-Up_Chest.png"
+    },
+    {
+      "id": "exr_41n2hxnFMotsXTj3",
+      "name": "Bench Press",
+      "equipment": "BARBELL",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/boDyoVc/41n2hxnFMotsXTj3__Barbell-Bench-Press_Chest.png"
+    }
+  ]
+}

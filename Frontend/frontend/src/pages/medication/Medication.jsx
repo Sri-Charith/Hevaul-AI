@@ -166,7 +166,7 @@ export default function Medication() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 pt-32">
       <div className="max-w-7xl mx-auto space-y-8">
 
         {/* Header */}

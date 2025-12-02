@@ -7,25 +7,33 @@ const sleepLogSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    sleepTime: {
+    startTime: {
       type: Date,
       required: true,
     },
-    wakeTime: {
+    endTime: {
       type: Date,
       required: true,
     },
     duration: {
-      type: Number, // in minutes
+      type: Number, // in hours
       required: true,
     },
     quality: {
-      type: Number,
-      min: 1,
-      max: 10,
+      type: String,
+      enum: ['Poor', 'Average', 'Good', 'Excellent'],
+      required: true,
+    },
+    mood: {
+      type: String, // e.g., '😊', '😐', '😫'
+      required: true,
     },
     notes: {
       type: String,
+    },
+    sleepScore: {
+      type: Number, // 0-100
+      default: 0,
     },
     date: {
       type: Date,

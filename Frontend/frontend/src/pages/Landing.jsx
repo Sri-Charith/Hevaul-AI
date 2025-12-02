@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
 import { Button, buttonVariants } from '../components/ui/button.jsx'
-import { ArrowRight, Sparkles, Utensils, Moon, Droplet, Pill, Brain, LogOut, User } from 'lucide-react'
+import { ArrowRight, Sparkles, Utensils, Moon, Droplet, Pill, Brain, LogOut, User, Dumbbell } from 'lucide-react'
 import { useAuthStore } from '../store/authStore.js'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '../lib/utils.js'
 import BrandLogo from '../components/BrandLogo.jsx'
+
+import ParticleBackground from '../components/ParticleBackground.jsx'
 
 export default function Landing() {
   const { user, token, logout } = useAuthStore()
@@ -17,23 +19,28 @@ export default function Landing() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      <ParticleBackground />
       {/* Navigation Bar */}
       {isAuthenticated && (
-        <nav className="w-full bg-white/80 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <Link to="/" className="flex items-center gap-2">
-                <BrandLogo textSize="text-xl" logoSize="h-6" />
+        <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="bg-blue-600/95 backdrop-blur-xl border border-blue-500/30 shadow-lg shadow-blue-900/20 rounded-2xl px-6 py-3 flex items-center justify-between">
+
+              <Link to="/" className="flex items-center gap-2 group">
+                <div className="bg-white rounded-lg px-3 py-1.5 shadow-sm transition-transform duration-200 group-hover:scale-105">
+                  <BrandLogo textSize="text-xl" logoSize="h-6" />
+                </div>
               </Link>
+
               <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600 hidden sm:inline-block">Welcome, {user?.name || 'User'}!</span>
+                <span className="text-sm text-blue-50 hidden sm:inline-block font-medium">Welcome, {user?.name || 'User'}!</span>
 
                 <Link
                   to="/profile"
                   className={cn(
                     buttonVariants({ variant: 'ghost', size: 'icon' }),
-                    "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                    "text-blue-50 hover:text-white hover:bg-blue-500 rounded-xl transition-colors"
                   )}
                   title="Profile"
                 >
@@ -43,7 +50,7 @@ export default function Landing() {
                 <Button
                   variant="ghost"
                   onClick={handleLogout}
-                  className="flex items-center gap-2 text-gray-600 hover:text-red-600 hover:bg-red-50"
+                  className="flex items-center gap-2 text-blue-50 hover:text-white hover:bg-red-500/20 rounded-xl transition-colors"
                 >
                   <LogOut className="h-4 w-4" />
                   <span className="hidden sm:inline">Logout</span>
@@ -55,7 +62,7 @@ export default function Landing() {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center pt-32">
         <div className="max-w-6xl mx-auto px-4 py-16 text-center">
 
           <div className="flex items-center justify-center gap-2 mb-6">
@@ -160,6 +167,21 @@ export default function Landing() {
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Dashboard</h3>
                   <p className="text-gray-600 text-sm">
                     View all your health data
+                  </p>
+                </div>
+              </Link>
+
+              <Link
+                to="/exercises"
+                className="group p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-blue-500"
+              >
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-red-500 transition-colors">
+                    <Dumbbell className="h-8 w-8 text-red-600 group-hover:text-white transition-colors" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Exercises</h3>
+                  <p className="text-gray-600 text-sm">
+                    Browse and search exercises
                   </p>
                 </div>
               </Link>

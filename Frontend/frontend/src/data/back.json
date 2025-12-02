@@ -1,0 +1,64 @@
+{
+  "BACK": [
+    {
+      "id": "exr_41n2hcFJpBvAkXCP",
+      "name": "Seated Row with Towel",
+      "equipment": "TOWEL",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/XZdUjUY/41n2hcFJpBvAkXCP__Seated-Row-with-Towel_Back_720.png"
+    },
+    {
+      "id": "exr_41n2hHdjQpnyNdie",
+      "name": "One Arm Bent-over Row",
+      "equipment": "DUMBBELL",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/3jCUx9e/41n2hHdjQpnyNdie__Dumbbell-Bent-over-Row_back_Back.png"
+    },
+    {
+      "id": "exr_41n2hRH4aTB379Tp",
+      "name": "45 Degree Hyperextension",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/6n8I6Ap/41n2hRH4aTB379Tp__45-degree-hyperextension-(arms-in-front-of-chest)_Back.png"
+    },
+    {
+      "id": "exr_41n2hd6SThQhAdnZ",
+      "name": "Chin-ups",
+      "equipment": "PULL-UP BAR",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/MSgUDiH/41n2hd6SThQhAdnZ__Chin-ups-(narrow-parallel-grip)_Back.png"
+    },
+    {
+      "id": "exr_41n2hsBtDXapcADg",
+      "name": "Pull-up",
+      "equipment": "PULL-UP BAR",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/qx0CUFh/41n2hsBtDXapcADg__Pull-up_Back.png"
+    },
+    {
+      "id": "exr_41n2hU4y6EaYXFhr",
+      "name": "Pull-up (Neutral Grip)",
+      "equipment": "PULL-UP BAR",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/3XMA2St/41n2hU4y6EaYXFhr__Pull-up-(neutral-grip)_Back.png"
+    },
+    {
+      "id": "exr_41n2hftBVLiXgtRQ",
+      "name": "Wide Grip Pull-Up",
+      "equipment": "PULL-UP BAR",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/KBzpP5C/41n2hftBVLiXgtRQ__Wide-Grip-Pull-Up_Back.png"
+    },
+    {
+      "id": "exr_41n2hadPLLFRGvFk",
+      "name": "Sliding Floor Pulldown on Towel",
+      "equipment": "TOWEL",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/u0VBiFl/41n2hadPLLFRGvFk__Sliding-Floor-Pulldown-on-Towel_Back.png"
+    },
+    {
+      "id": "exr_41n2hKZmyYXB2UL4",
+      "name": "Elbows Back Stretch",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/F99SEwF/41n2hKZmyYXB2UL4__Elbows-Back-Stretch-(male)_Chest.png"
+    },
+    {
+      "id": "exr_41n2hfnnXz9shkBi",
+      "name": "Lying Lower Back Stretch",
+      "equipment": "BODY WEIGHT",
+      "imageUrl": "https://cdn.exercisedb.dev/w/images/QlVHyEt/41n2hfnnXz9shkBi__Lying-Lower-Back-Stretch-(bent-knee)-(female)_Back.png"
+    }
+  ]
+}
